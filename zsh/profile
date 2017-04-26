@@ -3,31 +3,39 @@
 
 ### Directories
 export DOTFILES="$HOME/dotfiles"
-export DOWNLOADS="$HOME/dl"
+export DOWNLOADS="$HOME/downloads"
 export SRC="$HOME/src"
-export PERSONAL="$HOME/personal"
 export MEDIA="$HOME/media"
-export MUSIC="$MEDIA/music"
-export SCRATCH="$HOME/scratch"
+export MUSIC="$MEDIA/music/auto"
 
-### Defaults
-export EDITOR="kak"
-export VISUAL="$EDITOR"
-export VIEWER="jfbview"
-export BROWSER="w3m"
-export PUBLISHER="git"
-export PLAYER="mpv"
-export PRINTER="siebl-2203-printer"
+### Printing
+export PRINTER="siebl-3323-printer"
 
 ### Path
-PATH="$PATH:/sbin"
-PATH="$PATH:/usr/sbin"
-PATH="$PATH:$HOME/bin"
-export PATH
+export PATH="$PATH:$HOME/bin:$HOME/.local/bin"
+export SCRATCH="$HOME/scratch"
 
-### Settings
-export LANG="en_US.UTF-8"
-export GPG_TTY=`tty`
+### Applications
+export VISUAL="/usr/bin/vim"
+export EDITOR="/usr/bin/vim"
+export VIEWER="mupdf"
+export BROWSER="firefox"
+export PUBLISHER="git"
+export PLAYER="mpv"
+
+### Python path
+typeset -T PYTHONPATH pythonpath
+pythonpath=(/home/alli/bin $pythonpath)
+export PYTHONPATH
+export pythonpath
+typeset -U path pythonpath
+
+path=(/home/alli/bin /home/alli/.cabal/bin $path)
+export PATH
+export path
+
+export USR_LIB_PATH=/home/alli/Arduino/libraries/
+export PATH="/home/alli/src/esp-open-sdk/xtensa-lx106-elf/bin:$PATH"
 
 # Program-Specific Environments
 # -----------------------------
@@ -38,23 +46,8 @@ export MD_DATA="$DOTFILES/md"
 ### Maude
 maude_home="$SRC/maude"
 maude_main="$maude_home/src/Main"
-full_maude="$maude_home/full-maude"
-maude_formal_environment="$maude_home/MFE/src"
 MAUDE_LIB="/usr/share/maude"
-export MAUDE_LIB="$MAUDE_LIB:$maude_main:$full_maude:$maude_formal_environment"
-
-### K Framework
-K_RELEASE="$HOME/work/k/k-distribution/target/release/k"
-k_path="$K_RELEASE/lib/native/linux"
-k_path="$k_path:$K_RELEASE/lib/native/linux64"
-k_path="$k_path:$K_RELEASE/bin"
-k_ld_library_path="$K_RELEASE/lib/native/linux64"
-export K_RELEASE
-export PATH="$PATH:$k_path"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$k_ld_library_path"
-
-### LLVM Dev
-export LLVM_ROOT="$HOME/work/uiuc-cs526/llvm"
+export MAUDE_LIB="$MAUDE_LIB:$maude_main"
 
 # XDG dirs
 export XDG_DATA_HOME="$HOME/.local/share"
@@ -62,37 +55,20 @@ export XDG_CONFIG_HOME="$DOTFILES"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DOWNLOAD_DIR="$DOWNLOADS"
 export XDG_DESKTOP_DIR="/dev/null"
-export XDG_RUNTIME_DIR="/tmp"
+export XDG_CONFIG_HOME="$HOME/.config"
 
 # Host-Specific Environments
 # --------------------------
 
 case "$HOST" in
-    gentoo-ehildenb)
-        echo -en "\e]P4264bc2"  # S_blue
-        echo -en "\e]PC4374a6"  # ls blue (default vim blue)
-        OS_DISTRO="gentoo"
-        ETC="/etc"
-        ;;
-    ehildenb-ubuntu)
-        OS_DISTRO="debian"
-        ;;
-    websites)
-        OS_DISTRO="freebsd"
-        ETC="/usr/local/etc"
-        ;;
-    brooksmedia|brooks)
-        OS_DISTRO="arch"
-        ETC="/etc"
-        ;;
     alliarch)
         OS_DISTRO="arch"
-        ETC="/etc"
+        ;;
+    brooks)
+        OS_DISTRO="arch"
         ;;
     *)
         OS_DISTRO=""
-        ETC=""
         ;;
 esac
 export OS_DISTRO
-export ETC

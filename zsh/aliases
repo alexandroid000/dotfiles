@@ -16,33 +16,12 @@ chpwd() { ls }              # ls when cd
 c() {                       # cd with bookmarks
     dirname="$1"
     [[ -z "$dirname" ]] && dirname="$HOME"          # homedir
-    if [[ ! -d "$dirname" ]]; then
-        case "$dirname" in                          # bookmarks
-            500*)       newname="$HOME/work/uiuc-math500"
-                        prefix='500' ;;
-            570*)       newname="$HOME/work/uiuc-math570"
-                        prefix='570' ;;
-            522*)       newname="$HOME/work/class/uiuc-cs522"
-                        prefix='522' ;;
-            dotfiles*)  newname="$DOTFILES"
-                        prefix='dotfiles' ;;
-            fm*)        newname="$HOME/work/fm_seminar"
-                        prefix='fm' ;;
-            kbmc*)      newname="$HOME/work/k/k-backend/k-distribution/samples-kore/kernelc/tests/kbmc"
-                        prefix='kbmc' ;;
-            kore*)      newname="$HOME/work/kore"
-                        prefix="kore" ;;
-            k*)         newname="$HOME/work/k"
-                        prefix='k' ;;
-            mauke*)     newname="$HOME/work/mauke"
-                        prefix='mauke' ;;
-            scratch*)   newname="$SCRATCH"
-                        prefix='scratch' ;;
-            evm*)       newname="$HOME/work/evm-modeling"
-                        prefix='evm' ;;
-        esac
-        dirname="$newname${dirname#$prefix}"
-    fi
+    case "$dirname" in                              # bookmarks
+        b)          dirname="$HOME/projects/bounce" ;;
+        m)          dirname="$HOME/documents/spr17/motion" ;;
+        ml)         dirname="$HOME/documents/spr17/ml" ;;
+        ca)         dirname="$HOME/documents/fall16/nonlinear_dynamics/ca" ;;
+    esac
     cd "$dirname"
 }
 
@@ -54,7 +33,7 @@ alias head='head -n30'
 # compression
 # -----------
 alias tarx='tar -xvf'
-tarc() { tar -cvf $1.tar $1 }
+tarc() { tar -zcvf $1.tar.gz $1 }
 zipd() { zip -rv $1.zip $1 }
 alias unrar='unrar e'
 
@@ -63,8 +42,9 @@ alias unrar='unrar e'
 backup() {
     dest="$1"
     [[ ! -d "$dest" ]] && return 1
-    rsync --progress --partial --archive --verbose --ignore-existing --delete \
-        bin dotfiles .mail media .passwd src .ssh work "$dest"
+    rsync --progress --partial --archive --verbose --ignore-existing \
+            --delete -e ssh \
+        texmf projects papers "$dest"
 }
 
 # simple web server
@@ -73,58 +53,24 @@ http() {
     python -m http.server $@
 }
 
-# Shortcuts/Bookmarks
-# ===================
+# Shortcuts
+# =========
 
-# editor
-# ------
-e() {
-    file="$1" && shift
-    if [[ ! -f "$file" ]]; then
-        case "$file" in
-            contacts)   file="$DOTFILES/mail/mutt/contacts" ;;
-            schedule)   file="$HOME/personal/schedule.md"   ;;
-            aliases)    file="$DOTFILES/zsh/aliases"        ;;
-            dotfiles*)  file="$DOTFILES${file#dotfiles}"    ;;
-        esac
-    fi
-    $EDITOR $file $@
+function pdf() {
+    mupdf "$1" &
 }
 
-# viewer
-# ------
-v() {
-    pdf="$1" && shift
-    case "$pdf" in
-        maude)  pdf="$SRC/maude/Maude-manual.pdf"       ;;
-    esac
-    $VIEWER $pdf $@
-}
 
 # browser
 # -------
 o() {
-    header=()
-    [[ "$1" == 'spoof' ]] \
-        && header=('-header' 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:34.0) Gecko/20100101 Firefox/34.0') \
-        && shift
-    site="$1" && shift
+    site="$1"
     [[ -z "$site" ]] && site = 'https://google.com' # homepage
     case "$site" in                                 # bookmarks
-        500)    site='http://www.math.illinois.edu/~ruiloja/Math500/'                           ;;
-        421)    site='https://courses.engr.illinois.edu/cs421/su2016/'                          ;;
-        522)    site='https://courses.engr.illinois.edu/cs522'                                  ;;
-        fm)     site='https://wiki.illinois.edu/wiki/display/fmseminar/Formal+Methods+Seminar'  ;;
-        github) site='https://github.com'                                                       ;;
-        gitlab) site='https://gitlab-beta.engr.illinois.edu'                                    ;;
-        g|google)
-            site="https://www.google.com/search?q="
-            search_string="$(echo $@ | tr ' ' '+')"
-            site="$site$search_string"
-            ;;
+        500)    site='http://www.math.illinois.edu/~ruiloja/Math500/'   ;;
         ws)
-            site='http://watchseries.la/serie'
-            series="$1"
+            site='http://thewatchseries.be/tvshow'
+            series="$2"
             case "$series" in
                 kimmy)  series="unbreakable-kimmy-schmidt"              ;;
                 got)    series="game-of-thrones"                        ;;
@@ -134,7 +80,7 @@ o() {
             site="$site/$series"
             ;;
     esac
-    $BROWSER $header $site
+    $BROWSER $site
 }
 
 # printing
@@ -153,7 +99,7 @@ p() {
     file="$1" && [[ ! -f "$file" ]] && echo "No file '$file'" && return 1
     shift
 
-    lpr '-#'$copies $pages $sides $@ "$file"
+    lpr '-#'$copies $sides $pages $@ "$file"
 }
 
 # mail
@@ -218,18 +164,22 @@ crop_pdf() {
 md() {
     format="$1"
     md_doc="$2"
+    template="default"
 
     case "$format" in
         markdown)   ext='md'                    ;;
         latex)      ext='pdf'                   ;;
+        my-latex)   ext='pdf'; format='latex';
+                    template="my_template.tex"  ;;
         latex-raw)  ext='tex'; format='latex'   ;;
         beamer)     ext='pdf'                   ;;
         beamer-raw) ext='tex'; format='beamer'  ;;
-        *)          ext="$format"               ;;
+        html)       ext='html'     ;;
+        *)          ext="$format" ;;
     esac
 
     pandoc --standalone --filter=pandoc-citeproc \
-           --from=markdown --to="$format" \
+           --from=markdown --to="$format" --template="$template" \
            --output="${md_doc%.*}.$ext" "$md_doc" \
            || echo "pandoc error ..." >&2
 }
@@ -247,53 +197,113 @@ alias mem='hw mem'
 cp_etc() {
     dir="$1"
     [[ ! -d "$DOTFILES/etc/$dir" ]] && return 1
-    files=($(find "$DOTFILES/etc/$dir" -type f))
-    for file in $files; do
-        dest="$ETC/${file#$DOTFILES/etc/}"
-        echo "copying '$file' to '$dest'..."
-    done
     for file in $(find "$DOTFILES/etc/$dir" -type f); do
-        dest="$ETC/${file#$DOTFILES/etc/}"
-        sudo cp "$file" "$dest"
+        sudo cp "$file" "${file#$DOTFILES}"
     done
 }
 
-# kernel building
-# ---------------
-rebuild_kernel() {
-    sudo mount /dev/sda2 /boot
-    sudo make -j5 -l15 \
-        && sudo make modules_install \
-        && sudo make install \
-        && sudo grub-mkconfig -o /boot/grub/grub.cfg
+# ogv format to mp3 (audio only)
+# ------------------------------
+convert() {
+    conversion="$1" && shift
+    infile="$1"
+    fname="${infile%\.*}"
+    case "$conversion" in
+        ogv2mp3)    ffmpeg -i "$ogvfile" "$fname".mp3
+                    ;;
+        svg2pdf)    rsvg-convert -f pdf -o "$fname".pdf "$fname".svg
+                    ;;
+        *)          echo "Unknown conversion, doing nothing"
+                    ;;
+    esac
 }
 
 
-# Scheduling
-# ==========
+# ROS utils
+# ---------
 
-# schedule today
-# --------------
-today() {
-    day_offset="$1"
-    schedule_file="$PERSONAL/schedule.md"
-    [[ -z "$day_offset" ]] && day_offset='0'
-    dDay="$(date --date="$day_offset days" +%A | awk '{print tolower($0)}')"
-    dDate="$(date --date="$day_offset days" +'%b %-d')"
-    pandoc-tangle --from=markdown --to=markdown \
-                  --section="$dDay|$dDate" "$schedule_file"
+ros() {
+  source /opt/ros/kinetic/setup.zsh
+  export PYTHONPATH=/opt/ros/kinetic/lib/python2.7/site-packages:$PYTHONPATH
+  export PKG_CONFIG_PATH="/opt/ros/kinetic/lib/pkgconfig:$PKG_CONFIG_PATH"
+
+  # Useful aliases
+  alias catkin_make="catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python2 -DPYTHON_INCLUDE_DIR=/usr/include/python2.7 -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so"
+
+### ROS path
+  typeset -T ROS_PACKAGE_PATH ros_package_path
+  ros_package_path=(/home/alli/catkin_ws $ros_package_path)
+  export ROS_PACKAGE_PATH
+  export ros_package_path
+  typeset -U ROS_PACKAGE_PATH ros_package_path
+
+  fix_ros_ip
+
+  # If you use Gazebo:
+  #source /usr/share/gazebo/setup.sh
+}
+
+# replace "localhost" in URI so ghc can resolve it?
+fix_ros_ip() {
+    if [[ "${ROS_MASTER_URI#*localhost}" != "$ROS_MASTER_URI" ]]; then
+        uri="${ROS_MASTER_URI##*localhost:}"
+        export ROS_MASTER_URI="http://127.0.0.1:"$uri
+    fi
+    export ROS_IP=127.0.0.1
+    export ROS_HOSTNAME=127.0.0.1
 }
 
 
-# X-11
-# ====
+# download cs421 video
+# --------------------
+cs421_vid() {
+    vid="$1"
+    [[ -z "$vid" ]] && return 1
+    wget 'https://courses.engr.illinois.edu/cs421/static/videos/'"$vid/$vid"'.mp4'
+}
 
-# startx aliases
-# --------------
-alias mpv='startx /usr/bin/mpv'
-alias firefox='startx /usr/bin/firefox -width 1920 -height 1080'
-alias firefoxsmall='startx /usr/bin/firefox -width 1680 -height 1050'
-alias private='startx /usr/bin/firefox -private'
+# backup
+# ------
+backup() {
+    dest="$1"
+    [[ ! -d "$dest" ]] && return 1
+    rsync --progress --partial --archive --verbose --ignore-existing --delete \
+        bin docs dotfiles .mail media .passwd src .ssh todo.md work "$dest"
+}
+
+
+# Remote Control
+# ==============
+
+# remote x control
+# ----------------
+xdo_remote() {
+    ssh_serv="$1"
+    [[ -z "$ssh_serv" ]] && return 1
+    xdotoolize | ssh "$ssh_serv" 'export DISPLAY=:0; while read key_line; do \
+        xdotool key $key_line; done'
+}
+
+# Hardware
+# ========
+
+# reset wireless card
+# -------------------
+rip() {
+    sudo ip link set wlp2s0 down
+    echo "wlp2s0 down"
+    sleep 10
+    sudo ip link set wlp2s0 up
+    echo "wlp2s0 up"
+}
+
+# dual monitor display
+# --------------------
+alias xmonitor="xrandr --output VGA1 --auto --left-of eDP1"
+
+
+# Media
+# =====
 
 # mpv on remote server
 # --------------------
@@ -305,12 +315,18 @@ remote_mpv() {
     ssh $1 'export DISPLAY=:0; mpv '"$url"
 }
 
-# remote x control
-# ----------------
-xdo_remote() {
-    ssh_serv="$1"
-    [[ -z "$ssh_serv" ]] && return 1
-    remote_command='export DISPLAY=:0; while read key_line; do'
-    remote_command="$remote_command"' xdotool key $keyline; done'
-    xdotoolize | ssh "$ssh_serv" "$remote_command"
+
+# Scheduling
+# ==========
+
+# schedule today
+# --------------
+today() {
+    day_offset="$1"
+    schedule_file="~/schedule.md"
+    [[ -z "$day_offset" ]] && day_offset='0'
+    dDay="$(date --date="$day_offset days" +%A | awk '{print tolower($0)}')"
+    dDate="$(date --date="$day_offset days" +'%b %-d')"
+    pandoc-tangle --from=markdown --to=markdown \
+                  --section="$dDay|$dDate" "$schedule_file"
 }

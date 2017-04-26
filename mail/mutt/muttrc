@@ -4,12 +4,15 @@
 # Certificates file
 set certificate_file = ~/dotfiles/mail/mutt/certificates
 
+# mailcap
+set mailcap_path = ~/dotfiles/mailcap
+
 # Charsets
 set send_charset = "utf-8"
 set assumed_charset = "iso-8859-1"
 
 # Editor
-set editor = "vim -c 'set syntax=markdown ft=mail enc=utf-8'"
+set editor = "kak"
 
 # Pager
 set menu_scroll = yes
@@ -18,7 +21,7 @@ set markers = no
 
 # Sort by threads
 set sort = threads
-set sort_aux = from
+set sort_aux = reverse-last-date-received
 set strict_threads = yes
 
 # do not show all headers, just a few
@@ -29,10 +32,13 @@ unhdr_order     *
 hdr_order       From To Cc Bcc Date Subject
 
 # send a blind carbon copy to self (for pretty convo view)
-my_hdr Bcc: hildenb2@illinois.edu
+#my_hdr Bcc: nilles2@illinois.edu
 
 # Keybindings
 # ===========
+
+# jump to next flagged message
+macro index f <search>~F\r
 
 # scrolling when viewing a message
 bind pager k previous-line
@@ -91,7 +97,7 @@ color index red default "~N~F~p" # new flagged messages to me
 
 # progress bar on bottom
 # ----------------------
-color progress    white          black
+#color progress    white          black
 
 
 # personal settings
@@ -101,8 +107,8 @@ color progress    white          black
 set sendmail = /usr/bin/msmtp
 
 # Template info
-set realname = "Everett Hildenbrandt"
-set from = "hildenb2@illinois.edu"
+set realname = "Alexandra Nilles"
+set from = "nilles2@illinois.edu"
 source ~/dotfiles/mail/mutt/contacts
 # set signature = ~/.signature
 
@@ -113,11 +119,11 @@ set folder="~/.mail/uiuc"
 set spoolfile="~/.mail/uiuc/INBOX"
 set postponed="+Drafts"
 set record="+Sent"
-mailboxes =INBOX =~/.mail/mines/INBOX
+mailboxes =INBOX =~/.mail/gmail/INBOX
 
 # Switch mailboxes quickly
 macro index <esc>1 "c~/.mail/uiuc/INBOX<return>"
-macro index <esc>2 "c~/.mail/mines/INBOX<return>"
+macro index <esc>2 "c~/.mail/gmail/INBOX<return>"
 
 # viewing content
 # ---------------
