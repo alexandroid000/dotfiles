@@ -23,13 +23,13 @@ set undoreload=10000
 filetype off
 """ where vundle will be stored, call a command
 set rtp+=$HOME/dotfiles/vim/bundle/Vundle.vim/
+set rtp+=$HOME/dotfiles/vim
 call vundle#begin()
 """ vundle modules to load
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'tpope/vim-markdown'
 Plugin 'yuratomo/w3m.vim'
-Plugin 'derekwyatt/vim-scala'
 call vundle#end()
 """ helpful vundle hints (to be run inside vim)
 ":PluginList - list plugins
@@ -56,8 +56,8 @@ set number
 
 " Enable solarized colorscheme
 " ----------------------------
-set t_Co=8
 set background=dark
+let g:solarized_termtrans=1
 colorscheme solarized
 
 
@@ -117,6 +117,8 @@ set foldnestmax=2
 " Keybindings
 " ===========
 
+let mapleader = ","
+
 " Window movement
 " ---------------
 map <C-j> <C-W>j
@@ -135,6 +137,10 @@ set nostartofline
 " -----------------------
 map <leader>pp :setlocal paste!<cr>
 map <leader>ss :setlocal spell!<cr>
+
+" Reload syntax highlighting
+" --------------------------
+map <leader>s :syntax sync fromstart<cr>
 
 " Reformat paragraph
 " ------------------
@@ -162,14 +168,14 @@ map <leader>h1 Vyp^v$r=
 map <leader>h2 Vyp^v$r-
 map <leader>h3 I### 
 map <leader>cb I```VypkA
-map <leader>j :read !date +\%F<cr>kdd<leader>h1
+map <leader>d :read !date +\%F<cr>kdd<leader>h1
 
 " Defined actions
 " ---------------
-map <leader>w :wa<cr>:!alias_call md latex %<cr>
-map <leader>b :wa<cr>:!alias_call md beamer %<cr>
-map <leader>o :!jfbview %:r.pdf<cr><cr>
-map <leader>p :wa<cr>:!alias_call p %:r.pdf<cr>
+map <leader>w :wa<cr>:!md latex %<cr><cr>
+map <leader>p :wa<cr>:!md beamer %<cr><cr>
+map <leader>h :wa<cr>:!md html %<cr><cr>
+map <leader>q :wa<cr>:!md my-latex %<cr><cr>
 
 " dumb vim+markdown
 " -----------------
@@ -190,7 +196,6 @@ autocmd FileType markdown |
 " --------------------------
 autocmd filetype make setlocal noexpandtab
 
-" Recognize maude/K files
-" -----------------------
+" Recognize maude files
+" ---------------------
 autocmd BufRead,BufNewFile *.maude set filetype=maude
-autocmd BufRead,BufNewFile *.k     set filetype=k

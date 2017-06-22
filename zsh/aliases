@@ -184,6 +184,16 @@ md() {
            || echo "pandoc error ..." >&2
 }
 
+mkpdf() {
+    doc="$1"
+    bibtex "${doc%.*}"
+    pdflatex "$doc"
+    pdflatex "$doc"
+    rm *.log *.out *.bbl *blg
+}
+
+    
+
 
 # System
 # ======
@@ -299,7 +309,7 @@ rip() {
 
 # dual monitor display
 # --------------------
-alias xmonitor="xrandr --output VGA1 --auto --left-of eDP1"
+alias xmonitor="xrandr --output VGA-1 --auto --left-of eDP-1"
 
 
 # Media

@@ -1,6 +1,0 @@
-ctl.!default {
-    type hw
-    card PCH
-}
-
-defaults.pcm.!card PCH
