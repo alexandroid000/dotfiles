@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+# shell script to prepend i3status with more stuff
+
+get_email() {
+    uiuc_email="$(ls ~/.mail/uiuc/INBOX/new | wc -w)"
+    anilles137_email="$(ls ~/.mail/gmail/INBOX/new | wc -w)"
+    email="$uiuc_email $anilles137_email"
+    echo "$email"
+}
+
+i3status | while :
+do
+    read line
+    email="$(get_email)"
+    echo "Mails: $email | $line" || exit 1
+done
