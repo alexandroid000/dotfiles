@@ -18,7 +18,7 @@ export SCRATCH="$HOME/scratch"
 ### Applications
 export VISUAL="/usr/bin/kak"
 export EDITOR="/usr/bin/kak"
-export VIEWER="mupdf"
+export VIEWER="mupdf-x11"
 export BROWSER="firefox"
 export PUBLISHER="git"
 export PLAYER="mpv"

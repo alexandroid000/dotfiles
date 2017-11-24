@@ -18,9 +18,7 @@ c() {                       # cd with bookmarks
     [[ -z "$dirname" ]] && dirname="$HOME"          # homedir
     case "$dirname" in                              # bookmarks
         b)          dirname="$HOME/projects/bounce" ;;
-        m)          dirname="$HOME/documents/spr17/motion" ;;
-        ml)         dirname="$HOME/documents/spr17/ml" ;;
-        ca)         dirname="$HOME/documents/fall16/nonlinear_dynamics/ca" ;;
+        em)         dirname="$HOME/documents/fa17/embedded" ;;
     esac
     cd "$dirname"
 }
@@ -57,7 +55,7 @@ http() {
 # =========
 
 function pdf() {
-    mupdf "$1" &
+    mupdf-x11 "$1" &
 }
 
 
