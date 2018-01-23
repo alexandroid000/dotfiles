@@ -32,7 +32,7 @@ floating_modifier $mod
 
 # start a terminal
 bindsym Control+Return exec urxvt
-#bindsym Control+Return exec "/home/alli/.i3/scripts/urxvt_here"
+#bindsym Control+Return exec "/home/alli/dotfiles/i3/scripts/urxvt_here"
 
 # kill i3 without mouse click
 bindsym $mod+Shift+e exit
@@ -61,8 +61,8 @@ bindsym XF86AudioRaiseVolume    exec "amixer set Master 5%+"
 bindsym Mod4+F12                exec "amixer set Master 5%+"
 #
 ## Keyboard backlight brightness binding
-bindsym XF86MonBrightnessDown   exec "sudo /home/alli/.i3/scripts/backlight_control 0"
-bindsym XF86MonBrightnessUp     exec "sudo /home/alli/.i3/scripts/backlight_control 1"
+bindsym XF86MonBrightnessDown   exec "sudo /home/alli/dotfiles/i3/scripts/backlight_control 0"
+bindsym XF86MonBrightnessUp     exec "sudo /home/alli/dotfiles/i3/scripts/backlight_control 1"
 #
 ## music keybindings
 bindsym $mod+y       exec "music vote up"
@@ -195,7 +195,7 @@ bindsym Mod4+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        status_command /home/alli/.i3/scripts/my_i3status
+        status_command /home/alli/dotfiles/i3/scripts/my_i3status
 }
 
-bindsym $mod+c exec /home/alli/.i3/scripts/random_lock
+bindsym $mod+c exec /home/alli/dotfiles/i3/scripts/random_lock
