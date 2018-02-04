@@ -212,7 +212,7 @@ cp_etc() {
 
 # ogv format to mp3 (audio only)
 # ------------------------------
-convert() {
+conv() {
     conversion="$1" && shift
     infile="$1"
     fname="${infile%\.*}"
@@ -259,15 +259,6 @@ fix_ros_ip() {
     fi
     export ROS_IP=127.0.0.1
     export ROS_HOSTNAME=127.0.0.1
-}
-
-
-# download cs421 video
-# --------------------
-cs421_vid() {
-    vid="$1"
-    [[ -z "$vid" ]] && return 1
-    wget 'https://courses.engr.illinois.edu/cs421/static/videos/'"$vid/$vid"'.mp4'
 }
 
 # backup

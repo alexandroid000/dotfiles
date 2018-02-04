@@ -43,6 +43,9 @@ export PATH="/home/alli/src/esp-open-sdk/xtensa-lx106-elf/bin:$PATH"
 ### Markdown
 export MD_DATA="$DOTFILES/md"
 
+### latex
+export TEXMFHOME="$HOME/common/texmf"
+
 ### Maude
 maude_home="$SRC/maude"
 maude_main="$maude_home/src/Main"
@@ -54,7 +57,7 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$DOTFILES"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DOWNLOAD_DIR="$DOWNLOADS"
-export XDG_DESKTOP_DIR="/dev/null"
+export XDG_DESKTOP_DIR="$HOME"
 export XDG_CONFIG_HOME="$HOME/.config"
 
 # Host-Specific Environments

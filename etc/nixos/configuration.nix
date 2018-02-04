@@ -10,16 +10,15 @@
       /etc/nixos/hardware-configuration.nix
     ];
 
-  fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/b2af8a0d-50c0-458d-a049-4d3f298b0513";
+  fileSystems."/home/alli/media" =
+    { device = "/dev/nvme0n1p4";
       fsType = "ext4";
-      neededForBoot = true;
     };
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.grub.device = "/dev/sda";
+  boot.loader.grub.device = "/dev/nvme0n1";
 
   # networking.hostName = "Brooks3"; # Define your hostname.
   networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -33,6 +32,9 @@
 
   # Set your time zone.
   time.timeZone = "America/Chicago";
+
+  # for chrome :(
+  nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
@@ -53,6 +55,7 @@
 	mupdf
 	cacert
 	unzip
+    zip
 	stack
 	ghc
 	gnumake
@@ -61,6 +64,15 @@
 	cairo
 	gtk2-x11
 	binutils
+	mpv
+	bc
+	haskellPackages.pandoc-citeproc
+    imagemagick
+    inkscape
+    python
+    python3
+    youtube-dl
+    google-chrome
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
