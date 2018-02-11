@@ -36,6 +36,15 @@
   # for chrome :(
   nixpkgs.config.allowUnfree = true;
 
+  # for keepkey:(
+  services.udev = {
+   extraRules = ''
+    SUBSYSTEM=="usb", ATTR{idVendor}=="2b24", ATTR{idProduct}=="0001", MODE="0666", GROUP="dialout", SYMLINK+="keepkey%n"
+    KERNEL=="hidraw*", ATTRS{idVendor}=="2b24", ATTRS{idProduct}=="0001",  MODE="0666", GROUP="dialout"
+   '';
+  };
+
+
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
@@ -73,6 +82,8 @@
     python3
     youtube-dl
     google-chrome
+    file
+    hledger
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

@@ -23,6 +23,9 @@ c() {                       # cd with bookmarks
     cd "$dirname"
 }
 
+# for nixOS
+[[ "$HOST" == "nixos" ]] && alias stack='stack --nix'
+
 # longer tail/head
 # ----------------
 alias tail='tail -n30'
