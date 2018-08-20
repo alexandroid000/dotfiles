@@ -1,6 +1,10 @@
 # Default Options
 # ===============
 
+# redshift
+# --------
+alias rs='redshift -l 40:-88'
+
 # colorized output
 # ----------------
 alias ls='ls --color=auto'
@@ -222,7 +226,7 @@ conv() {
     case "$conversion" in
         ogv2mp3)    ffmpeg -i "$ogvfile" "$fname".mp3
                     ;;
-        svg2pdf)    rsvg-convert -f pdf -o "$fname".pdf "$fname".svg
+        svg2pdf)    inkscape --file="$fname".svg --export-area-drawing --without-gui --export-pdf="$fname".pdf
                     ;;
         *)          echo "Unknown conversion, doing nothing"
                     ;;
@@ -301,7 +305,7 @@ rip() {
 
 # dual monitor display
 # --------------------
-alias xmonitor="xrandr --output VGA-1 --auto --left-of eDP-1"
+alias xmonitor="xrandr --output HDMI2 --mode 1920x1080 --auto --right-of eDP1"
 
 
 # Media
