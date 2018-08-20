@@ -1,7 +1,7 @@
 stack.yaml
 .stack-work
 *.sw*
-*.tex
+*.pyc
 *.o
 *.so
 *.zip
@@ -11,4 +11,9 @@ stack.yaml
 *.iso
 *.7z
 *.tmp
-*kompiled
+*.out
+*.log
+*.aux
+*.bbl
+*.blg
+*.bst
