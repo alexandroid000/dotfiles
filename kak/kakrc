@@ -41,6 +41,9 @@ map global user h XypjXHr=A<ret><esc>
 map global user j XypjXHr-A<ret><esc>XHd
 map global user r %{ | pandoc-citeproc --bib2yaml --format=biblatex <ret> }
 
+# word count
+map global user w %{:echo %sh{wc -w <lt><lt><lt> "${kak_selection}"}<ret>}
+
 # copy paste to system clipboard
 map global user y '<a-|>xsel --input --clipboard<ret>'
 map global user p '<a-!>xsel --output --clipboard<ret>'
