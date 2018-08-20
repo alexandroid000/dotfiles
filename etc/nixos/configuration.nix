@@ -36,6 +36,11 @@
   # for chrome :(
   nixpkgs.config.allowUnfree = true;
 
+  nixpkgs.config.firefox = {
+    enableGoogleTalkPlugin = true;
+  };
+
+
   # for keepkey:(
   services.udev = {
    extraRules = ''
@@ -44,46 +49,59 @@
    '';
   };
 
+  services.printing.enable = true;
+  services.printing.drivers = [ pkgs.gutenprint ];
+
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
-    	wget
-	vim
-	git
-	firefox
-	zsh
-	rxvt_unicode
-	kakoune
-	xsel
-  	htop
-	mutt
-	texlive.combined.scheme-full
-	pandoc
-	w3m
-	mupdf
-	cacert
-	unzip
-    zip
-	stack
-	ghc
-	gnumake
-	zlib
-	glib
-	cairo
-	gtk2-x11
-	binutils
-	mpv
-	bc
-	haskellPackages.pandoc-citeproc
-    imagemagick
-    inkscape
+    wget
+    file
+    vim
+    git
+    gcc
     python
     python3
+    maude
+    openssl
+    rxvt_unicode
+    zsh
+    kakoune
+    xsel
+    htop
+    mutt
+    texlive.combined.scheme-full
+    stack
+    ghc
+    pandoc
+    firefoxWrapper
+    chromium
+    w3m
+    mupdf
+    cacert
+    unzip
+    zip
+    gnumake
+    zlib
+    glib
+    cairo
+    gtk2-x11
+    binutils
+    mpv
+    bc
+    scrot
+    imagemagick
+    inkscape
     youtube-dl
-    google-chrome
-    file
     hledger
+    haskellPackages.pandoc-citeproc
+    #pythonPackages.beautifulsoup
+    python36Packages.pip
+    libpng
+    ffmpeg-full
+    feh
+    zotero
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -103,12 +121,10 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
 
   # redshift
   services.redshift = {
-    enable = true;
+    enable = false;
     latitude = "40";
     longitude = "-88";
     temperature.day = 5500;
@@ -137,7 +153,7 @@
             URxvt*.scrollBar:    false
 
             !URxvt.font:         9x15
-            URxvt*.font:         xft:terminus:size=14
+            URxvt*.font:         xft:inconsolata:pixelsize=22
             !disable weird keycap modes
             URxvt*.iso14755:     false
             URxvt*.iso14755_52:  false
