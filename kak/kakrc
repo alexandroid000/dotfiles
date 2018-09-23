@@ -37,8 +37,8 @@ map global user b %{:%sh{alias_call md beamer $kak_buffile}<ret>}
 map global user g %{ X | pandoc --from=markdown --to=markdown --columns=80 <ret> }
 
 # custom commands
-map global user h XypjXHr=A<ret><esc>
-map global user j XypjXHr-A<ret><esc>XHd
+map global user h xypjxHr=A<ret><esc>
+map global user j xypjxHr-A<ret><esc>
 map global user r %{ | pandoc-citeproc --bib2yaml --format=biblatex <ret> }
 
 # word count
