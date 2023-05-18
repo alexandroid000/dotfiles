@@ -51,42 +51,6 @@ p() {
 }
 
 
-# crop pdf
-# --------
-crop_pdf() {
-    start_page="$1"
-    stop_page="$2"
-    input_file="$3"
-    output_file="$4"
-    [[ -z "$start_page" ]] || [[ -z "$stop_page" ]] \
-        || [[ ! -f "$input_file" ]] || [[ -z "$output_file" ]] \
-        && return 1
-    gs -dFirstPage="$start_page" -dLastPage="$stop_page" \
-        -sOutputFile="$output_file" -dSAFER -dNOPAUSE -dBATCH \
-        -dPDFSETTING=/default -sDEVICE=pdfwrite -dCompressFonts=true \
-        -c ".setpdfwrite << /EncodeColorImages true /DownsampleMonoImages false \
-        /SubsetFonts true /ASCII85EncodePages false \
-        /DefaultRenderingIntent /Default /ColorConversionStrategy \
-        /LeaveColorUnchanged /MonoImageDownsampleThreshold 1.5 \
-        /ColorACSImageDict << /VSamples [ 1 1 1 1 ] /HSamples [ 1 1 1 1 ] \
-        /QFactor 0.4 /Blend 1 >> /GrayACSImageDict << /VSamples [ 1 1 1 1 ] \
-        /HSamples [ 1 1 1 1 ] /QFactor 0.4 /Blend 1 >> \
-        /PreserveOverprintSettings false /MonoImageResolution 300 \
-        /MonoImageFilter /FlateEncode /GrayImageResolution 300 \
-        /LockDistillerParams false /EncodeGrayImages true /MaxSubsetPCT 100 \
-        /GrayImageDict << /VSamples [ 1 1 1 1 ] /HSamples [ 1 1 1 1 ] \
-        /QFactor 0.4 /Blend 1 >> /ColorImageFilter /FlateEncode \
-        /EmbedAllFonts true /UCRandBGInfo /Remove /AutoRotatePages /PageByPage \
-        /ColorImageResolution 300 /ColorImageDict << /VSamples [ 1 1 1 1 ] \
-        /HSamples [ 1 1 1 1 ] /QFactor 0.4 /Blend 1 >> /CompatibilityLevel 1.7 \
-        /EncodeMonoImages true /GrayImageDownsampleThreshold 1.5 \
-        /AutoFilterGrayImages false /GrayImageFilter /FlateEncode \
-        /DownsampleGrayImages false /AutoFilterColorImages false \
-        /DownsampleColorImages false /CompressPages true \
-        /ColorImageDownsampleThreshold 1.5 /PreserveHalftoneInfo false >> \
-        setdistillerparams" -f "$input_file"
-}
-
 # markdown publishing
 md() {
     format="$1"
@@ -166,29 +130,4 @@ publishslides() {
     [[ ! -d "$dest" ]] && return 1
     rsync --progress --partial --archive --verbose --ignore-existing --delete \
         css figs header.txt ieee.csl Makefile my.reveal talk.html talk.md thesisrefs.bib "$dest"
-}
-
-
-
-# Hardware
-# ========
-
-# reset wireless card
-# -------------------
-rip() {
-    sudo ip link set wlp2s0 down
-    echo "wlp2s0 down"
-    sleep 10
-    sudo ip link set wlp2s0 up
-    echo "wlp2s0 up"
-}
-
-# mpv on remote server
-# --------------------
-remote_mpv() {
-    server="$1"
-    [[ -z "$server" ]] && return 1
-    url="$2"
-    [[ -z "$url" ]] && return 1
-    ssh $1 'export DISPLAY=:0; mpv '"$url"
 }

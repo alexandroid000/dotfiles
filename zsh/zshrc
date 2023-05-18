@@ -13,16 +13,15 @@ SAVEHIST=10000
 
 # Behavior
 # --------
-#setopt appendhistory autocd extendedglob nomatch hist_ignore_all_dups hist_ignore_space
-#unsetopt beep notify
-#bindkey -v
+setopt appendhistory autocd extendedglob nomatch hist_ignore_all_dups hist_ignore_space
+unsetopt beep notify
+bindkey -v
 
 # compinstall
 # -----------
-#zstyle :compinstall filename '/home/alli/.zshrc'
-#autoload -Uz compinit
-#compinit
-
+zstyle :compinstall filename '/home/alli/.zshrc'
+autoload -Uz compinit
+compinit
 
 # Personal
 # ========
@@ -38,7 +37,3 @@ env_files=("profile" "aliases")
 for env_file in $env_files; do
     [[ -f "$zsh_dir/$env_file" ]] && source "$zsh_dir/$env_file"
 done
-
-export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

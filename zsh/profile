@@ -19,6 +19,9 @@ export BROWSER="firefox"
 export PUBLISHER="git"
 export PLAYER="mpv"
 
+# Program-Specific Environments
+# -----------------------------
+
 ### Python path
 #typeset -T PYTHONPATH pythonpath
 #pythonpath=(/home/alli/bin $pythonpath)
@@ -26,12 +29,9 @@ export PLAYER="mpv"
 #export pythonpath
 #typeset -U path pythonpath
 
-path=(/home/alli/bin /home/alli/.cabal/bin $path)
+path=(/home/alli/bin $path)
 export PATH
 export path
-
-# Program-Specific Environments
-# -----------------------------
 
 ### latex
 export TEXMFHOME="$HOME/common/texmf"
@@ -44,3 +44,7 @@ export XDG_DOWNLOAD_DIR="$DOWNLOADS"
 export XDG_DESKTOP_DIR="$HOME"
 export XDG_CONFIG_HOME="$HOME/.config"
 
+# nvm (for node js dev)
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
