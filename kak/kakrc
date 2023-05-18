@@ -17,8 +17,10 @@ hook global BufSetOption filetype=(?!makefile).* %{
 set global scrolloff 12,12
 
 # autowrap at 80 chars
-set global autowrap_column 80
-hook global WinCreate .* %{ autowrap-enable }
+hook global BufSetOption filetype=(?!tsv).* %{
+    set global autowrap_column 80
+    hook buffer WinCreate .* %{ autowrap-enable }
+}
 
 colorscheme default
 
@@ -28,18 +30,9 @@ colorscheme default
 # insert date as level 2 header
 map global user d %{| date +\%F <ret>}
 
-# compile latex
-map global user l %{:%sh{alias_call md latex $kak_buffile}<ret>}
-# compile beamer
-map global user b %{:%sh{alias_call md beamer $kak_buffile}<ret>}
-
-# format text with pandoc
-map global user g %{ X | pandoc --from=markdown --to=markdown --columns=80 <ret> }
-
 # custom commands
 map global user h xypjxHr=A<ret><esc>
 map global user j xypjxHr-A<ret><esc>
-map global user r %{ | pandoc-citeproc --bib2yaml --format=biblatex <ret> }
 
 # word count
 map global user w %{:echo %sh{wc -w <lt><lt><lt> "${kak_selection}"}<ret>}

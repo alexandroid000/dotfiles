@@ -1,34 +1,7 @@
-# Default Options
-# ===============
-
-# redshift
-# --------
-alias rs='redshift -l 40:-88'
-
-# colorized output
-# ----------------
-alias ls='ls --color=auto'
-[[ "$OS_DISTRO" == "freebsd" ]] && alias ls='ls -G'
-alias grep='grep --color=auto'
-becho() { echo '\033[0;34m'$@'\033[0m' }
-gecho() { echo '\033[0;32m'$@'\033[0m' }
-recho() { echo '\033[0;31m'$@'\033[0m' }
-
 # convenient cd
 # -------------
 chpwd() { ls }              # ls when cd
-c() {                       # cd with bookmarks
-    dirname="$1"
-    [[ -z "$dirname" ]] && dirname="$HOME"          # homedir
-    case "$dirname" in                              # bookmarks
-        b)          dirname="$HOME/projects/bounce" ;;
-        em)         dirname="$HOME/documents/fa17/embedded" ;;
-    esac
-    cd "$dirname"
-}
 
-# for nixOS
-[[ "$HOST" == "nixos" ]] && alias stack='stack --nix'
 
 # longer tail/head
 # ----------------
@@ -42,15 +15,6 @@ tarc() { tar -zcvf $1.tar.gz $1 }
 zipd() { zip -rv $1.zip $1 }
 alias unrar='unrar e'
 
-# backup
-# ------
-backup() {
-    dest="$1"
-    [[ ! -d "$dest" ]] && return 1
-    rsync --progress --partial --archive --verbose --ignore-existing \
-            --delete -e ssh \
-        texmf projects papers "$dest"
-}
 
 # simple web server
 # -----------------
@@ -58,35 +22,14 @@ http() {
     python -m http.server $@
 }
 
+
 # Shortcuts
 # =========
 
 function pdf() {
-    mupdf-x11 "$1" &
+    mupdf "$1" &
 }
 
-
-# browser
-# -------
-o() {
-    site="$1"
-    [[ -z "$site" ]] && site = 'https://google.com' # homepage
-    case "$site" in                                 # bookmarks
-        500)    site='http://www.math.illinois.edu/~ruiloja/Math500/'   ;;
-        ws)
-            site='http://thewatchseries.be/tvshow'
-            series="$2"
-            case "$series" in
-                kimmy)  series="unbreakable-kimmy-schmidt"              ;;
-                got)    series="game-of-thrones"                        ;;
-                sil)    series="silicon-valley"                         ;;
-                robot)  series="mr_robot"                               ;;
-            esac
-            site="$site/$series"
-            ;;
-    esac
-    $BROWSER $site
-}
 
 # printing
 # --------
@@ -107,27 +50,6 @@ p() {
     lpr '-#'$copies $sides $pages $@ "$file"
 }
 
-# mail
-# ----
-m() {
-    if [[ "$#" -lt '1' ]]; then
-        mutt
-        return
-    fi
-    case "$1" in
-        c|check)
-            if [[ "$(ps aux | grep -c offlineimap)" -gt '1' ]]; then
-                pkill -9 offlineimap
-                rm ~/.offlineimap/pid
-            fi
-            offlineimap
-            ;;
-        *)
-            echo "Unrecognized option: '$1'"
-            return 1
-            ;;
-    esac
-}
 
 # crop pdf
 # --------
@@ -197,43 +119,6 @@ mkpdf() {
     rm *.log *.out *.bbl *blg
 }
 
-    
-
-
-# System
-# ======
-
-# hardware aliases
-# ----------------
-alias mem='hw mem'
-
-# copy etc
-# --------
-cp_etc() {
-    dir="$1"
-    [[ ! -d "$DOTFILES/etc/$dir" ]] && return 1
-    for file in $(find "$DOTFILES/etc/$dir" -type f); do
-        sudo cp "$file" "${file#$DOTFILES}"
-    done
-}
-
-# ogv format to mp3 (audio only)
-# ------------------------------
-conv() {
-    conversion="$1" && shift
-    infile="$1"
-    fname="${infile%\.*}"
-    case "$conversion" in
-        ogv2mp3)    ffmpeg -i "$ogvfile" "$fname".mp3
-                    ;;
-        svg2pdf)    inkscape --file="$fname".svg --export-area-drawing --without-gui --export-pdf="$fname".pdf
-                    ;;
-        *)          echo "Unknown conversion, doing nothing"
-                    ;;
-    esac
-}
-
-
 # ROS utils
 # ---------
 
@@ -245,7 +130,6 @@ ros() {
   # Useful aliases
   alias catkin_make="catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python2 -DPYTHON_INCLUDE_DIR=/usr/include/python2.7 -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so"
 
-### ROS path
   typeset -T ROS_PACKAGE_PATH ros_package_path
   ros_package_path=(/home/alli/catkin_ws $ros_package_path)
   export ROS_PACKAGE_PATH
@@ -273,22 +157,18 @@ fix_ros_ip() {
 backup() {
     dest="$1"
     [[ ! -d "$dest" ]] && return 1
+    rsync --progress --partial --archive --verbose --update --recursive --relative \
+        bin dotfiles media common projects "$dest"
+}
+
+publishslides() {
+    dest="$1"
+    [[ ! -d "$dest" ]] && return 1
     rsync --progress --partial --archive --verbose --ignore-existing --delete \
-        bin docs dotfiles .mail media .passwd src .ssh todo.md work "$dest"
+        css figs header.txt ieee.csl Makefile my.reveal talk.html talk.md thesisrefs.bib "$dest"
 }
 
 
-# Remote Control
-# ==============
-
-# remote x control
-# ----------------
-xdo_remote() {
-    ssh_serv="$1"
-    [[ -z "$ssh_serv" ]] && return 1
-    xdotoolize | ssh "$ssh_serv" 'export DISPLAY=:0; while read key_line; do \
-        xdotool key $key_line; done'
-}
 
 # Hardware
 # ========
@@ -303,14 +183,6 @@ rip() {
     echo "wlp2s0 up"
 }
 
-# dual monitor display
-# --------------------
-alias xmonitor="xrandr --output HDMI2 --mode 1920x1080 --auto --right-of eDP1"
-
-
-# Media
-# =====
-
 # mpv on remote server
 # --------------------
 remote_mpv() {
@@ -319,20 +191,4 @@ remote_mpv() {
     url="$2"
     [[ -z "$url" ]] && return 1
     ssh $1 'export DISPLAY=:0; mpv '"$url"
-}
-
-
-# Scheduling
-# ==========
-
-# schedule today
-# --------------
-today() {
-    day_offset="$1"
-    schedule_file="~/schedule.md"
-    [[ -z "$day_offset" ]] && day_offset='0'
-    dDay="$(date --date="$day_offset days" +%A | awk '{print tolower($0)}')"
-    dDate="$(date --date="$day_offset days" +'%b %-d')"
-    pandoc-tangle --from=markdown --to=markdown \
-                  --section="$dDay|$dDate" "$schedule_file"
 }

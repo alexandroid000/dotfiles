@@ -27,3 +27,15 @@
     chist = log --abbrev-commit --decorate --date=relative --all \
             --graph --topo-order --simplify-by-decoration \
             --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+[credential]
+	helper = cache --timeout=7200
+[safe]
+	directory = /home/alli/media/documents/website
+	directory = /home/alli/media/documents/website-new
+	directory = /home/alli/media/documents/cv
+	directory = /home/alli/media/documents/alexandroid000.github.io
+	directory = /mnt/media/documents/alexandroid000.github.io
+	directory = /mnt/media/documents/cv
+	directory = /mnt/media/projects/tunnelling
+	directory = /mnt/media/projects/outwithus/frontend
+	directory = /mnt/media/projects/outwithus/web-ui-react

@@ -1,4 +1,0 @@
-*/*::haskell ~amd64
-
-# seems a bit excessive
-=dev-haskell/stack-9.9.9 **
