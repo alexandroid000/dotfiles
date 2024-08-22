@@ -1,3 +1,0 @@
----
-geometry: margin=2.5cm
-...

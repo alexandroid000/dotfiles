@@ -122,7 +122,7 @@ backup() {
     dest="$1"
     [[ ! -d "$dest" ]] && return 1
     rsync --progress --partial --archive --verbose --update --recursive --relative \
-        bin dotfiles media common projects "$dest"
+        bin dotfiles common projects Zotero "$dest"
 }
 
 publishslides() {

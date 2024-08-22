@@ -29,7 +29,7 @@ export PLAYER="mpv"
 #export pythonpath
 #typeset -U path pythonpath
 
-path=(/home/alli/bin $path)
+path=(/home/alli/bin /home/alli/.local/bin $path)
 export PATH
 export path
 

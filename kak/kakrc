@@ -27,16 +27,6 @@ colorscheme default
 # Markdown manipulation
 # =====================
 
-# insert date as level 2 header
-map global user d %{| date +\%F <ret>}
-
-# custom commands
-map global user h xypjxHr=A<ret><esc>
-map global user j xypjxHr-A<ret><esc>
-
-# word count
-map global user w %{:echo %sh{wc -w <lt><lt><lt> "${kak_selection}"}<ret>}
-
 # copy paste to system clipboard
 map global user y '<a-|>xsel --input --clipboard<ret>'
 map global user p '<a-!>xsel --output --clipboard<ret>'
