@@ -1,7 +1,6 @@
 # ZSH options
 # ===========
 
-
 # color results of ls
 alias ls='ls --color=auto'
 
@@ -28,7 +27,7 @@ compinit
 
 # Set the prompt
 # --------------
-PROMPT='%F{magenta}%3~%f %# '
+PROMPT='%F{green}%3~%f %# '
 
 # Source environment stuff
 # ------------------------
