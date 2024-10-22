@@ -2,6 +2,8 @@
 # -------------
 chpwd() { ls }              # ls when cd
 
+kak() { /home/nillesa2/src/kakoune/src/kak "$@" ;}
+
 # longer tail/head
 # ----------------
 alias tail='tail -n30'
